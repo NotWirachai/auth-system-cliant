@@ -3,7 +3,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
-import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
