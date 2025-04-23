@@ -1,53 +1,103 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Form, Input, Button, message } from "antd";
-import { MailOutlined, LockOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { Form, Input, Button, Divider } from "antd";
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
+import logo from "../assets/logo2.png";
+import iconsFacebook from "../assets/icons-facebook.png";
+import iconsIG from "../assets/icons-ig.png";
+import iconsLine from "../assets/icons-line.png";
+import iconsYoutube from "../assets/icons-youtube.png";
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f0f2f5;
 `;
 
 const FormContainer = styled.div`
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
 `;
 
 const Title = styled.h1`
   text-align: center;
-  margin-bottom: 2rem;
-  color: #1890ff;
+  margin-bottom: 1.5rem;
+  font-size: 24px;
+  font-weight: 500;
+  color: #333;
 `;
 
 const Logo = styled.img`
-  width: 200px;
-  margin-bottom: 1rem;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  width: 220px;
+  margin: 0 auto 1rem;
 `;
 
 const ContactInfo = styled.div`
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 10px;
+  font-size: 14px;
 
   a {
-    color: #1890ff;
+    color: #1e59a8;
     text-decoration: none;
+    display: block;
+    margin-top: 5px;
 
     &:hover {
       text-decoration: underline;
+      color: #1a4f96;
     }
   }
+`;
+
+const SocialContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+`;
+
+const SocialIcon = styled.img`
+  width: 52px;
+  height: 52px;
+`;
+
+const StyledButton = styled(Button)`
+  background-color: #1e59a8;
+  border-color: #1e59a8;
+  border-radius: 8px;
+  height: 44px;
+  &:hover {
+    background-color: #1a4f96;
+    border-color: #1a4f96;
+  }
+  &:focus {
+    background-color: #1e59a8;
+    border-color: #1e59a8;
+  }
+`;
+
+const StyledDivider = styled(Divider)`
+  margin: 15px 0;
+`;
+
+const StyledInput = styled(Input)`
+  border-radius: 4px;
+  padding: 10px;
+  height: 44px;
+`;
+
+const StyledPasswordInput = styled(Input.Password)`
+  border-radius: 4px;
+  padding: 10px;
+  height: 44px;
 `;
 
 interface ResetFormData {
@@ -70,11 +120,9 @@ const ForgotPassword = () => {
       setLoading(true);
       await forgotPassword(values.email);
       setEmail(values.email);
-      // message.success("Reset code has been sent to your email!");
       setStep("reset");
     } catch (error: unknown) {
       const err = error as Error;
-      // message.error(err.message || "Failed to send reset code");
       alert(err.message || "Failed to send reset code");
     } finally {
       setLoading(false);
@@ -87,13 +135,20 @@ const ForgotPassword = () => {
       if (values.newPassword !== values.confirmPassword) {
         throw new Error("Passwords do not match");
       }
+
+      console.log("Reset password data:", {
+        email,
+        code: values.verifyCode,
+        newPassword: values.newPassword,
+      });
+
       await resetPassword(email, values.verifyCode!, values.newPassword!);
-      // message.success("Password has been reset successfully!");
-      alert("Password has change!");
+
+      alert("Password has been changed successfully!");
       navigate("/login");
     } catch (error: unknown) {
       const err = error as Error;
-      // message.error(err.message || "Failed to reset password");
+      console.error("Reset password error:", error);
       alert(err.message || "Failed to reset password");
     } finally {
       setLoading(false);
@@ -103,77 +158,135 @@ const ForgotPassword = () => {
   return (
     <Container>
       <FormContainer>
-        <Logo src="/bluestone-logo.png" alt="Bluestone Logo" />
+        <Logo src={logo} alt="Bluestone Logo" />
         <Title>Forgot Password</Title>
 
-        <Form form={form} name="forgot-password" onFinish={handleSendToken} autoComplete="off" layout="vertical">
-          <Form.Item
-            name="email"
-            rules={[
-              { required: true, message: "Please input your email!" },
-              { type: "email", message: "Please enter a valid email!" },
-            ]}
-          >
-            <Input prefix={<MailOutlined />} placeholder="Email" size="large" />
-          </Form.Item>
+        {step === "email" ? (
+          <>
+            <Form form={form} name="forgot-password" onFinish={handleSendToken} autoComplete="off" layout="vertical">
+              <Form.Item
+                name="email"
+                rules={[
+                  { required: true, message: "Please input your email!" },
+                  { type: "email", message: "Please enter a valid email!" },
+                ]}
+              >
+                <StyledInput placeholder="Email" />
+              </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading} block size="large">
-              Send Reset Token
-            </Button>
-          </Form.Item>
+              <Form.Item>
+                <StyledButton type="primary" htmlType="submit" loading={loading} block>
+                  Send Reset Token
+                </StyledButton>
+              </Form.Item>
+            </Form>
 
-          <Form.Item>
-            <Link to="/login">Back to Login</Link>
-          </Form.Item>
-        </Form>
-        {step !== "email" && (
-          <Form form={form} name="reset-password" onFinish={handleResetPassword} autoComplete="off" layout="vertical">
-            <Form.Item name="verifyCode" rules={[{ required: true, message: "Please input verification code!" }]}>
-              <Input prefix={<SafetyCertificateOutlined />} placeholder="Verify Code" size="large" />
-            </Form.Item>
+            <StyledDivider />
 
-            <Form.Item
-              name="newPassword"
-              rules={[
-                { required: true, message: "Please input new password!" },
-                { min: 6, message: "Password must be at least 6 characters!" },
-              ]}
-            >
-              <Input.Password prefix={<LockOutlined />} placeholder="New Password" size="large" />
-            </Form.Item>
+            <ContactInfo>
+              <div>Contact Us</div>
+              <SocialContainer>
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                  <SocialIcon src={iconsFacebook} alt="Facebook" />
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                  <SocialIcon src={iconsIG} alt="Instagram" />
+                </a>
+                <a href="https://line.me" target="_blank" rel="noopener noreferrer">
+                  <SocialIcon src={iconsLine} alt="Line" />
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+                  <SocialIcon src={iconsYoutube} alt="YouTube" />
+                </a>
+              </SocialContainer>
+              <a href="http://www.bluestone.co.th" target="_blank" rel="noopener noreferrer">
+                www.bluestone.co.th
+              </a>
+            </ContactInfo>
+          </>
+        ) : (
+          <>
+            <Form form={form} name="reset-password" onFinish={handleResetPassword} autoComplete="off" layout="vertical">
+              <Form.Item>
+                <StyledInput value={email} disabled placeholder="Email" />
+              </Form.Item>
 
-            <Form.Item
-              name="confirmPassword"
-              rules={[
-                { required: true, message: "Please confirm your password!" },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("newPassword") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error("Passwords do not match!"));
-                  },
-                }),
-              ]}
-            >
-              <Input.Password prefix={<LockOutlined />} placeholder="Confirm Password" size="large" />
-            </Form.Item>
+              <Form.Item>
+                <StyledButton
+                  type="primary"
+                  onClick={() => {
+                    form.resetFields();
+                    setStep("email");
+                  }}
+                  loading={loading}
+                  block
+                >
+                  Send Reset Token
+                </StyledButton>
+              </Form.Item>
 
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading} block size="large">
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
+              <Form.Item name="verifyCode" rules={[{ required: true, message: "Please input verification code!" }]}>
+                <StyledInput placeholder="Verify Code" />
+              </Form.Item>
+
+              <Form.Item
+                name="newPassword"
+                rules={[
+                  { required: true, message: "Please input new password!" },
+                  { min: 6, message: "Password must be at least 6 characters!" },
+                ]}
+              >
+                <StyledPasswordInput placeholder="New Password" />
+              </Form.Item>
+
+              <Form.Item
+                name="confirmPassword"
+                rules={[
+                  { required: true, message: "Please confirm your password!" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("newPassword") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Passwords do not match!"));
+                    },
+                  }),
+                ]}
+              >
+                <StyledPasswordInput placeholder="Confirm Password" />
+              </Form.Item>
+
+              <Form.Item>
+                <StyledButton type="primary" htmlType="submit" loading={loading} block>
+                  Submit
+                </StyledButton>
+              </Form.Item>
+            </Form>
+
+            <StyledDivider />
+
+            <ContactInfo>
+              <div>Contact Us</div>
+              <SocialContainer>
+                <a href="https://www.facebook.com/Bluestone.co.th/" target="_blank" rel="noopener noreferrer">
+                  <SocialIcon src={iconsFacebook} alt="Facebook" />
+                </a>
+                <a href="https://www.instagram.com/bluestonethailand/" target="_blank" rel="noopener noreferrer">
+                  <SocialIcon src={iconsIG} alt="Instagram" />
+                </a>
+                <a href="https://line.me/ti/p/~@bluestonethailand" target="_blank" rel="noopener noreferrer">
+                  <SocialIcon src={iconsLine} alt="Line" />
+                </a>
+                <a href="https://www.youtube.com/channel/UCQ3mRpetmm5Ek-LLdTjwaNQ" target="_blank" rel="noopener noreferrer">
+                  <SocialIcon src={iconsYoutube} alt="YouTube" />
+                </a>
+              </SocialContainer>
+              <a href="http://www.bluestone.co.th" target="_blank" rel="noopener noreferrer">
+                www.bluestone.co.th
+              </a>
+            </ContactInfo>
+          </>
         )}
-
-        <ContactInfo>
-          <a href="http://www.bluestone.co.th" target="_blank" rel="noopener noreferrer">
-            www.bluestone.co.th
-          </a>
-          <div>Contact Us</div>
-        </ContactInfo>
       </FormContainer>
     </Container>
   );
