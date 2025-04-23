@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  const login = async (username: string, password: string): Promise<void> => {
+  const login = async (username: string, password: string) => {
     const { token, user } = await authApi.login(username, password);
     setToken(token);
     setUser(user);
