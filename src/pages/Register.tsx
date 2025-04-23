@@ -29,7 +29,7 @@ const FormContainer = styled.div`
 
 const Logo = styled.img`
   display: block;
-  width: 220px;
+  width: 100%;
   margin: 0 auto 1rem;
 `;
 

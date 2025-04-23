@@ -36,7 +36,7 @@ const Title = styled.h1`
 
 const Logo = styled.img`
   display: block;
-  width: 220px;
+  width: 100%;
   margin: 0 auto 1rem;
 `;
 
@@ -186,16 +186,16 @@ const ForgotPassword = () => {
             <ContactInfo>
               <div>Contact Us</div>
               <SocialContainer>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.facebook.com/Bluestone.co.th/" target="_blank" rel="noopener noreferrer">
                   <SocialIcon src={iconsFacebook} alt="Facebook" />
                 </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.instagram.com/bluestonethailand/" target="_blank" rel="noopener noreferrer">
                   <SocialIcon src={iconsIG} alt="Instagram" />
                 </a>
-                <a href="https://line.me" target="_blank" rel="noopener noreferrer">
+                <a href="https://line.me/ti/p/~@bluestonethailand" target="_blank" rel="noopener noreferrer">
                   <SocialIcon src={iconsLine} alt="Line" />
                 </a>
-                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.youtube.com/channel/UCQ3mRpetmm5Ek-LLdTjwaNQ" target="_blank" rel="noopener noreferrer">
                   <SocialIcon src={iconsYoutube} alt="YouTube" />
                 </a>
               </SocialContainer>

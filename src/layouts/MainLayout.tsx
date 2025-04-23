@@ -15,17 +15,6 @@ const LayoutContainer = styled.div`
   background-repeat: no-repeat;
   background-attachment: fixed;
   position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for better readability */
-    z-index: 1;
-  }
 `;
 
 const ContentWrapper = styled.div`
