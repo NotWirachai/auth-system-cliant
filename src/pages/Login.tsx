@@ -139,24 +139,16 @@ const StyledPasswordInput = styled(Input.Password)`
   height: 44px;
 `;
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  lastLogin?: string;
-}
-
 const Login = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 
   const onFinish = async (values: { username: string; password: string }) => {
     try {
       setLoading(true);
-      const user = (await login(values.username, values.password)) as User;
-      const lastLoginMessage = user.lastLogin ? `\nLast login: ${new Date(user.lastLogin).toLocaleString()}` : "";
-
+      await login(values.username, values.password);
+      const lastLoginMessage = user?.lastLogin ? `\nLast login: ${new Date(user?.lastLogin).toLocaleString()}` : "";
       // If rememberMe is checked, store credentials (in a real app, use a more secure method)
       if (rememberMe) {
         localStorage.setItem("rememberedUsername", values.username);
