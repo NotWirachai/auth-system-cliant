@@ -149,7 +149,7 @@ interface User {
 const Login = () => {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   const onFinish = async (values: { username: string; password: string }) => {
     try {

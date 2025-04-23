@@ -39,8 +39,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const { token, user } = await authApi.login(username, password);
     setToken(token);
     setUser(user);
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
+    // localStorage.setItem("token", token);
+    // localStorage.setItem("user", JSON.stringify(user));
     return user;
   };
 
@@ -51,8 +51,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("user");
   };
 
   const forgotPassword = async (email: string) => {

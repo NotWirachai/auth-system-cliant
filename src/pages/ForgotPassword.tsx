@@ -135,13 +135,6 @@ const ForgotPassword = () => {
       if (values.newPassword !== values.confirmPassword) {
         throw new Error("Passwords do not match");
       }
-
-      console.log("Reset password data:", {
-        email,
-        code: values.verifyCode,
-        newPassword: values.newPassword,
-      });
-
       await resetPassword(email, values.verifyCode!, values.newPassword!);
 
       alert("Password has been changed successfully!");
